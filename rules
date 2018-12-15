@@ -1,0 +1,211 @@
+require ["fileinto", "variables", "mailbox", "body", "regex", "reject", "envelope"];
+
+#This is the most effective rule to eliminate low quality spam
+if not header :contains "To" [
+    "@catchallDomain.foo",
+    "yourEmailAddress@foo.bar",
+    "@noreply.github.com" #This is very important!
+]
+{
+  reject "Stop faking To: headers.";
+  stop;
+}
+  
+
+if anyof(
+  header :contains "From" [
+      "newsletter@", #these two are working quite well
+      "newsletters@",
+      
+      "bewertung@pizza.de",
+      "produktempfehlung@notebooksbilliger.de",
+      "@neues.ebay-kleinanzeigen.de",
+      "@dialog.ebay-kleinanzeigen.de",
+      "news@email.xing.com",
+      "aws-marketing-email-replies@amazon.com",
+      "noreply@qemailserver.com",
+      "Neuigkeiten@simplytel.de",
+      "no-reply-alexa@amazon.com",
+      "noreply-appstore@amazon.com",
+      "METRO_DE@express.medallia.eu",
+      "no-reply@readly.com",
+      "windowsinsiderprogram@e-mail.microsoft.com",
+      "no-reply@amazonappservices.com",
+      "mail@family-newsletter.de",
+      "vfe-campaign-response@amazon.com",
+      "newsletter@businessinsider.com",
+      "news@linkedin.com",
+      "feedback@namecheap.com",
+      "marketing@changelly.com",
+      "renewals@namecheap.com",
+      "twitch@sfmarketing.twitch.tv",
+      "invite@mail.paypal-survey.com",
+      "alibaba@email.alibaba.com",
+      "noreply@buhl-newsletter.de",
+      "motorrad@newsletter.louis.de",
+      "info@news.jeans-fritz.de",
+      "feedback@em.pizza.de"
+  ],
+  header :contains "Subject" [
+      ", Ihr LinkedIn Profil wurde besucht",
+      "Mal in Suchen erschienen.",
+      "Einladung zur Teilnahme an einer Studie für eBay",
+      "Helfen Sie uns, Ihr eBay-Konto zu schützen",
+      "Wie viel liegt Ihnen an"
+  ],
+  body :text :contains [
+      "Bitte beachte: mit der Zeit rutscht deine Anzeige in den Suchergebnissen nach hinten, da täglich",
+      "Um wieder mehr Sichtbarkeit zu erhalten, schieb deine Anzeige für",
+      "Sie waren an diesem Artikel interessiert, daher haben wir hier ähnliche Artikel für Sie",
+      "Senken Sie den Preis, um mehr Käufer anzusprechen"
+  ]
+  )
+{
+  reject "Stop sending spam.";
+  stop;
+}  
+
+#Bitcoin Spam
+if anyof(
+  body :text :regex "([13][a-km-zA-HJ-NP-Z1-9]{25,34}\s)", #regular bitcoin
+  )
+{
+  reject "Please refrain from sending me cryptocurrency addresses.";
+  stop;
+}  
+
+if header :contains "X-Mailer" "Microsoft Windows Live Mail" {
+  reject "Rejected due to the use of Windows Live Mail. If you're not a spambot please use a different email client.";
+  stop;
+}
+
+if header :contains "From" "aliexpress.com" {
+  if header :contains "Subject" [
+    "Please confirm delivery",
+    "the seller has left feedback"
+  ] {
+    discard;
+    stop;
+  }
+}
+
+if header :contains "From" "news@pizza.de" {
+  if not body :text :contains [
+    "Gutschein"
+  ] {
+    discard;
+    stop;
+  }
+}
+
+#This is tailored for two specific spammers
+if anyof ( 
+ body :text :contains [
+    "cpx online active AG",
+    "Alexander adv doo Skopje",
+    "Starship Marketing",
+    "starship.zone@protonmail.com",
+    "starship.zone",
+    "starship . zone",
+    "multispider",
+    "Yonkana Srl"
+],
+body :text :contains [
+    "Werkstattwagen",
+    "Werkzeugwagen",
+    "Veranstaltungspavillon",
+    "Veranstaltungszelt",
+    "Werbestifte",
+    "Werkstattbedarf",
+    "Lagerbedarf",
+    "Luxuskulis",
+    "Werbekulis",
+    "Kugelschreiber",
+    "Sonderposten",
+    "Gewerbetreibende",
+    "S.e.x.kontakte",
+    "Feuerloescher",
+    "Lagerregal",
+    "Werbegeschenke",
+    "Werbedrucke",
+    "Paketwaage",
+    "Teleskopklappleiter",
+    "Grosseinkauf",
+    "Großeinkauf",
+    "Sonderposten",
+    "Eismaschine",
+    "Kofferset",
+    "Werbetafel",
+    " ICO ",
+    "White Paper",
+    "Whitepaper",
+    "Lieferung frei Haus",
+    "Weltneuheit",
+    "Wichtiger Schutz",
+    "magnetvorhang",
+    "Werkzeugset",
+    "Werbekugelschreiber",
+    "Werbemittel",
+    "Feuerlöscher",
+    "Pulverlöscher",
+    "Dieser Preis wird von uns nicht verlangt",
+    "Dieser Preis wird nicht von uns verlangt",
+    "Blockchain",
+    "ultrapromotion02",
+    "Pflichtverpflegungssätze",
+    "TLG Travel Group LLC",
+    "Eurorest",
+    "milf",
+    "gilf",
+    "Dekorationspflanze",
+    "Kunstpflanze",
+    "Schwerlastregal",
+    "Stromgenerator",
+    "Messe",
+    "Baustelle",
+    "Chefsessel",
+    "Chefessel",
+    "Angebo t",
+    ",-",
+    "A ngebot",
+    "E ur o",
+    "Eu ro",
+    "E uro",
+    "Eur o",
+    "E u r o",
+    "Fickdate",
+    "Fick",
+    "Fickcommunity",
+    "Datingplattform",
+    "Dating",
+    "s.ex",
+    "Sonderangebot",
+    "Ray-Ban",
+    "Eiswuerfelmaschine",
+    "Geschaeftsfreund",
+    "Eiswuerfelbereiter",
+    "Icemaker",
+    "crypto",
+    "exchange",
+    "Arzneimittel",
+    "Erektionsdysfunktion",
+    "Erektion",
+    "Flirt",
+    "Reife Frauen",
+    "Transportkiste",
+    "Aufbewahrungstruhe",
+    "zzgl. MwSt.",
+    "seitensprung",
+    "F,rauen",
+    "Grossproduktion",
+    "Bitcoin Wallet:",
+    "BTC Adresse:",
+    "bitcoin address",
+    "S e xpartner",
+    "kennenlernen"
+    ]
+) 
+{
+  reject "Stop sending spam.";
+  stop;
+}
