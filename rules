@@ -67,7 +67,7 @@ if anyof(
 
 #Bitcoin Spam
 if anyof(
-  body :text :regex "([13][a-km-zA-HJ-NP-Z1-9]{25,34}\s)", #regular bitcoin
+  body :text :regex "([13][a-km-zA-HJ-NP-Z1-9]{25,34}[\n\r\t\s]+)", #regular bitcoin
   )
 {
   reject "Please refrain from sending me cryptocurrency addresses.";
