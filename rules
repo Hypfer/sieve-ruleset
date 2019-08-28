@@ -44,21 +44,29 @@ if anyof(
       "noreply@buhl-newsletter.de",
       "motorrad@newsletter.louis.de",
       "info@news.jeans-fritz.de",
-      "feedback@em.pizza.de"
+      "feedback@em.pizza.de",
+      "events@github.com",
+      "LinkedIn Research <linkedin@e.linkedin.com>",
+      "mixer@engage.mixer.com",
+      "news@magix.net",
+      "promotion5@amazon.de"
   ],
   header :contains "Subject" [
       ", Ihr LinkedIn Profil wurde besucht",
       "Mal in Suchen erschienen.",
       "Einladung zur Teilnahme an einer Studie für eBay",
       "Helfen Sie uns, Ihr eBay-Konto zu schützen",
-      "Wie viel liegt Ihnen an"
+      "Wie viel liegt Ihnen an",
+      "Geben Sie eine Bewertung für Ihre eBay-Artikel ab",
+      "Möchten Sie auf die Einladung von"
   ],
   body :text :contains [
       "Bitte beachte: mit der Zeit rutscht deine Anzeige in den Suchergebnissen nach hinten, da täglich",
       "Um wieder mehr Sichtbarkeit zu erhalten, schieb deine Anzeige für",
       "Sie waren an diesem Artikel interessiert, daher haben wir hier ähnliche Artikel für Sie",
       "Senken Sie den Preis, um mehr Käufer anzusprechen",
-      "Geben Sie eine Bewertung für Ihre eBay-Artikel ab"
+      "Geben Sie eine Bewertung für Ihre eBay-Artikel ab",
+      "Bewerte Deine Bestellung"
   ]
   )
 {
@@ -203,7 +211,12 @@ body :text :contains [
     "BTC Adresse:",
     "bitcoin address",
     "S e xpartner",
-    "kennenlernen"
+    "kennenlernen",
+    "/ub.php?",
+    "Online-Apotheke",
+    "direktvertrieb",
+    "auf Rechnung",
+    "Sprühnebel"
     ]
 ) 
 {
