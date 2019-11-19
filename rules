@@ -223,3 +223,16 @@ body :text :contains [
   reject "Stop sending spam.";
   stop;
 }
+
+if allof(
+  body :text :regex  "^\\+1",
+  body :text :contains "${github_plusone_spam}"
+) {
+  discard;
+  stop;
+}
+
+set "github_plusone_spam" "+1
+
+-- 
+You are receiving this because you are subscribed to this thread.";
